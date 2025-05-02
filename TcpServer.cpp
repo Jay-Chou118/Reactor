@@ -1,5 +1,20 @@
 #include "TcpServer.h"
 #include <arpa/inet.h>
+#include "TcpConnection.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+int TcpServer::acceptConnection(void* arg)
+{
+    TcpServer* server = static_cast<TcpServer*>(arg);
+    //和客户端建立连接
+    int cfd = accept(server->m_lfd,NULL,NULL);
+    //从线程池中取出一个子线程的反应堆实例，去处理这个cfd
+    EventLoop* evLoop = server->m_threadPool->takeWorkerEventLoop();
+    //将cfd放到TcpConnection中处理
+    TcpConnection* conn = new TcpConnection(cfd,evLoop);
+    return 0;
+}
 
 TcpServer::TcpServer(unsigned short port,int threadNum)
 {
@@ -67,7 +82,7 @@ void TcpServer::run()
     m_threadPool->run();
     //添加检测的任务
     //初始化一个channel实例
-    Channel* channel = new Channel(m_lfd,FDEvent::ReadEvent,acceptConnection,nullptr,nullptr,server);
+    Channel* channel = new Channel(m_lfd,FDEvent::ReadEvent,acceptConnection,nullptr,nullptr,this);
     m_mainLoop->addTask(channel,ElemType::ADD);
     //启动反应堆模型
     m_mainLoop->run();
@@ -76,14 +91,3 @@ void TcpServer::run()
 }
 
 
-int TcpServer::acceptConnection(void* arg)
-{
-    TcpServer* server = static_cast<TcpServer*>(arg);
-    //和客户端建立连接
-    int cfd = accept(server->m_lfd,NULL,NULL);
-    //从线程池中取出一个子线程的反应堆实例，去处理这个cfd
-    EventLoop* evLoop = server->m_threadPool->takeWorkerEventLoop();
-    //将cfd放到TcpConnection中处理
-    tcpConnectionInit();
-    return 0;
-}

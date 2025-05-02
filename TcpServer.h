@@ -18,7 +18,7 @@ public:
     void setListen();
     //启动服务器
     void run();
-    static int  acceptConnection();
+    static int  acceptConnection(void* arg);
 
 };
 

@@ -1,4 +1,5 @@
 #include "HttpRequest.h"
+#include "HttpResponse.h"
 #include "TcpServer.h"
 #include <ctype.h>
 #include <assert.h>
@@ -183,7 +184,7 @@ bool HttpRequest::parseHttpRequest(Buffer* readBuf,HttpRequest* response,Buffer*
             //1.根据解析出的原始数据，对客户端的请求做出处理
             processHttpRequest(response);
             //2.组织响应数据并发送给客户端
-            httpResponsePreapareMsg(response,sendBuf,socket);
+            response->prepareMsg(sendBuf,socket);
         }
     }
 
@@ -210,6 +211,44 @@ bool HttpRequest::processHttpRequest(HttpRequest* response)
         file = m_url.data() + 1;
     }
     //获取文件属性
+    struct stat st;
+    int ret = stat(file,&st);
+
+    if(ret == -1)
+    {
+
+        //文件不存在 --回复404
+        response->setFileName("404.html");
+        response->setStatusCode(StatusCode::NotFound);
+        //响应头
+        response->addHeader("Content-type",getFileTyppe(".html"));
+        response->sendDataFunc = sendFile;
+
+        return 0;
+    }
+
+    response->setFileName(file);
+    response->setStatusCode(StatusCode::OK);
+
+    //判断文件类型
+    if(S_ISDIR)
+    {
+        //把这个目录中的内容发送给客户端
+
+        //响应头
+        response->addHeader("Content-type",getFileTyppe(".html"));
+        response->sendDataFunc = sendDir;
+
+    }else{
+        //把文件的内容发送给客户端
+
+        //响应头
+        char tmp[12] = {0};
+        sprintf(tmp,"%ld",st.st_size);
+        response->addHeader("Content-type",getFileTyppe(file));
+        response->addHeader("Content-type",to_string(st.st_size));
+        response->sendDataFunc = sendFile;
+    }
     
 }
 

@@ -1,6 +1,6 @@
 #pragma once
 #include "Buffer.h"
-#include "Httpresponse.h"
+#include "HttpResponse.h"
 
 #include <map>
 
@@ -63,8 +63,8 @@ public:
     //解码字符串
     string decodeMsg(string from);
     const string getFileTyppe(const string name);
-    void sendDir(string dirName,Buffer* sendBuf,int cfd);
-    void sendFile(string dirName,Buffer* sendBuf,int cfd);
+    static void sendDir(string dirName,Buffer* sendBuf,int cfd);
+    static void sendFile(string dirName,Buffer* sendBuf,int cfd);
     inline void setMethod(string method)
     {
         m_method = method;

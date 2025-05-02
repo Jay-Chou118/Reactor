@@ -1,3 +1,5 @@
+#include <unistd.h>
+#include <stdio.h>
 #include "EpoolDispatcher.h"
 
 EpollDispatcher::EpollDispatcher(EventLoop *evloop) : Dispatcher(evloop)
@@ -62,17 +64,17 @@ EpollDispatcher::dispatch(int timeout){
         }
         if(events & EPOLLIN)
         {
-            eventActivate(evLoop,fd,ReadEvent);
+            m_evLoop->eventActive(fd,(int)FDEvent::ReadEvent);
         }
         if(events & EPOLLOUT)
         {
-            eventActivate(evLoop,fd,WriteEvent);
+            m_evLoop->eventActive(fd,(int)FDEvent::WriteEvent);
         }
     }
     
 }
 
-int EpollDispatcher::epollCtl()
+int EpollDispatcher::epollCtl(int op)
 {
     struct epoll_event ev;
     ev.data.fd = m_chanel->getSocker();

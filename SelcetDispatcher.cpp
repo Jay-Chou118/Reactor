@@ -65,11 +65,13 @@ SelectDispatcher::dispatch(int timeout){
     {
         if(FD_ISSET(i,&rdtmp))
         {
-            eventActivate();
+            m_evLoop->eventActive(i,(int)FDEvent::ReadEvent);
+            // eventActivate();
         }
         if(FD_ISSET(i,&wrtmp))
         {
-            eventActivate();
+            m_evLoop->eventActive(i,(int)FDEvent::WriteEvent);
+            // eventActivate();
         }
     }
     return 0;

@@ -1,7 +1,8 @@
-#include <poll.h>
-#include "PollDispatcher.h"
 #include "Dispatcher.h"
-
+#include <sys/select.h>
+#include "SelectDispatcher.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 PollDispatcher::PollDispatcher(EventLoop* evloop) : Dispatcher(evloop)
 {
@@ -114,11 +115,13 @@ PollDispatcher::dispatch(int timeout)
         }
         if(m_fds[i].revents & POLLIN)
         {
-            eventActivate();
+            m_evLoop->eventActive(m_fds[i].fd,(int)FDEvent::ReadEvent);
+            //eventActivate();
         }
         if(m_fds[i].revents & POLLOUT)
         {
-            eventActivate();
+            m_evLoop->eventActive(m_fds[i].fd,(int)FDEvent::WriteEvent);
+            //eventActivate();
         }
     }
     return 0 ;

@@ -1,5 +1,8 @@
 #pragma once
+#include <string>
 #include <malloc.h>
+
+using namespace std;
 
 class Buffer
 {
@@ -27,6 +30,7 @@ public:
     //写内存：1.直接写 2.接受套接字数据
     int appendString(const char* data,int size);
     int appendString(const char* data);
+    int appendString(const string data);
     int socketRead(int fd);
     //根据\r\n取出一行，找到其在数据块中的位置，放回该位置
     char* findCRLF();
