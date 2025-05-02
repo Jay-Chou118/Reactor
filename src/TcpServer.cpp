@@ -79,6 +79,7 @@ void TcpServer::run()
 {
 
     //Debug("服务器程序已经启动.....");
+    printf("服务器程序已经启动.....");
     //启动线程池
     m_threadPool->run();
     //添加检测的任务

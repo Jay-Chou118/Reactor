@@ -29,6 +29,8 @@ int HttpRequest::hexToDec(char c)
     {
         return c - 'A' + 10;
     }
+
+    return -1;
 }
 
 HttpRequest::HttpRequest(/* args */)
@@ -252,7 +254,7 @@ bool HttpRequest::processHttpRequest(HttpResponse* response)
         char tmp[12] = {0};
         sprintf(tmp,"%ld",st.st_size);
         response->addHeader("Content-type",getFileTyppe(file));
-        response->addHeader("Content-type",to_string(st.st_size));
+        response->addHeader("Content-length",to_string(st.st_size));
         response->sendDataFunc = sendFile;
     }
     
@@ -278,7 +280,7 @@ string HttpRequest::decodeMsg(string msg)
         }
     }
 
-    str.append(1,'\0');
+    // str.append(1,'\0');
     return str;
 }
 
@@ -367,14 +369,18 @@ void HttpRequest::sendDir(string dirName,Buffer* sendBuf,int cfd)
         struct stat st;
         char subPath[1024] = {0};
         sprintf(subPath,"%s/%s",dirName.data(),name);
-        if(S_ISDIR(st.st_mode))
+        if (stat(subPath, &st) == 0)
         {
-            //a标签 <a href="">name<\a>
-            sprintf(buf + strlen(buf),"<tr><td><a href=\"%s/\">%s</a></td><%ld</td></tr>",name,name,st.st_size);
-        
-        }else{
-            sprintf(buf + strlen(buf),"<tr><td><a href=\"%s\">%s</a></td><%ld</td></tr>",name,name,st.st_size);
+            if(S_ISDIR(st.st_mode))
+            {
+                //a标签 <a href="">name<\a>
+                sprintf(buf + strlen(buf),"<tr><td><a href=\"%s/\">%s</a></td><%ld</td></tr>",name,name,st.st_size);
+            
+            }else{
+                sprintf(buf + strlen(buf),"<tr><td><a href=\"%s\">%s</a></td><%ld</td></tr>",name,name,st.st_size);
+            }
         }
+
         //send(cfd,buf,strlen(buf),0);
         sendBuf->appendString(buf);
 #ifndef MSG_SEND_AUTO
