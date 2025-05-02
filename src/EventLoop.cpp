@@ -1,9 +1,13 @@
 #include <thread>
-#include <string.h>
+#include <cassert>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <mutex>
+#include <cstring>
 #include "EventLoop.h"
 #include "SelectDispatcher.h"
 #include "PollDispatcher.h"
-#include "EpoolDispatcher.h"
+#include "EpollDispatcher.h"
 
 
 void EventLoop::taskWakeup()
@@ -21,11 +25,13 @@ EventLoop::EventLoop(const string threadName)
 {
     m_isQuit = true;  //默认没有启动
     m_threadID = this_thread::get_id();
+    // m_threadName = threadName == string() ? "MainThread" : (const_cast<string>(threadName));
+    // m_threadName = threadName.empty() ? "MainThread" : threadName;
     m_threadName = threadName == string() ? "MainThread" : threadName;
     m_dispatcher = new EpollDispatcher(this);
     //map
     m_channelMap.clear();
-    int ret = socketpair(AF_UNIX,SOCK_STREAM,0,m_soketPair);
+    int ret = socketpair(AF_UNIX,SOCK_STREAM,0,m_socketPair);
     if(ret == -1){
         perror("socketpair");
         exit(0);
@@ -81,11 +87,11 @@ int EventLoop::eventActive(int fd,int event)
     assert(channel->getSocket() == fd);
     if(event & (int)FDEvent::ReadEvent && channel->readCallback)
     {
-        channel->readCallback(channel->const_cast<void*>(getArg()));
+        channel->readCallback(const_cast<void*>(channel->getArg()));
     }
     if(event & (int)FDEvent::WriteEvent && channel->writeCallback)
     {
-        channel->writeCallback(channel->const_cast<void*>(getArg()));
+        channel->writeCallback(const_cast<void*>(channel->getArg()));
     }
 }
 
@@ -95,7 +101,7 @@ int EventLoop::addTask(Channel* channel,ElemType type){
     m_mutex.lock();
     //创建新节点
     ChannelElement* node = new ChannelElement;
-    node->channel = Channel;
+    node->channel = channel;
     node->type = type;
     m_taskQ.push(node);
     m_mutex.unlock();
@@ -142,6 +148,8 @@ int EventLoop::processTaskQ(){
         //freeChannel(channel);
         delete node;
     }
+
+    return 0;
 
 }
 
@@ -210,6 +218,8 @@ int EventLoop::readMessage()
 {
     char buf[256];
     read(m_socketPair[1],buf,sizeof(buf));
+
+    return 0;
 
 }
 

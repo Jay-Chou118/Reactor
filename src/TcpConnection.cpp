@@ -12,26 +12,23 @@ TcpConnection::TcpConnection(int fd,EventLoop* evloop)
     m_response = new HttpResponse;
     m_name = "Connection-" + to_string(fd);
     m_channel = new Channel(fd,FDEvent::ReadEvent,processRead,processWrite,tcpConnectionDestroy,this);
-    m_evloop->addTask(m_channel,ElemType::ADD);
+    m_evLoop->addTask(m_channel,ElemType::ADD);
 
 }
 
 TcpConnection::~TcpConnection()
 {
     
-    
     if(m_readBuf && m_readBuf->readableSize() == 0 && m_writeBuf && m_writeBuf->readableSize() == 0)
     {
         delete m_readBuf;
-        delete _writeBuf;
+        delete m_writeBuf;
         delete m_request;
         delete m_response;
-        m_evLoop->freeChannel(m_channel);
-        delete conn;
-        
+        m_evLoop->freeChannel(m_channel);        
     }
     
-    Debug("连接断开， 释放资源, gameover , connName: %s",m_name);
+    //Debug("连接断开， 释放资源, gameover , connName: %s",m_name);
 
 }
 
@@ -43,7 +40,7 @@ int TcpConnection::processRead(void* arg)
     int socket = conn->m_channel->getSocket();
     int count = conn->m_readBuf->socketRead(socket);
 
-    Debug("接收到的http请求数据: %s",conn->m_readBuf->data());
+    //Debug("接收到的http请求数据: %s",conn->m_readBuf->data());
 
     if(count > 0)
     {
@@ -79,7 +76,7 @@ int TcpConnection::processRead(void* arg)
 
 int TcpConnection::processWrite(void* arg)
 {
-    Debug("开始发送数据了（基于写事件）.....");
+    //Debug("开始发送数据了（基于写事件）.....");
     TcpConnection* conn = static_cast<TcpConnection*>(arg);
 
     //发送数据
@@ -92,9 +89,9 @@ int TcpConnection::processWrite(void* arg)
             //1.不再检测写事件 -- 修改channel中保存的事件
             conn->m_channel->writeEventEnable(false);
             //2. 修改dispatcher检测的集合 -- 添加任务节点
-            conn->m_channel->addTask(conn->m_channel,ElemType::MODIFY);
+            conn->m_evLoop->addTask(conn->m_channel,ElemType::MODIFY);
             //3. 删除这个节点
-            conn->m_channel->addTask(conn->m_channel,ElemType::DELETE);
+            conn->m_evLoop->addTask(conn->m_channel,ElemType::DELETE);
 
         }
     }

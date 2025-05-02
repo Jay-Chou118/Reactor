@@ -3,9 +3,9 @@
 WorkerThread::WorkerThread(int index)
 {
     m_evLoop = nullptr;
-    m_thread = nullptr;
     m_threadID = thread::id();
     m_name = "SubThread-" + to_string(index);
+    m_thread = nullptr;
     
 
 }
@@ -20,7 +20,7 @@ WorkerThread::~WorkerThread()
 
 }
 
-int WorkerThread::run()
+void WorkerThread::run()
 {
 
     //创建子线程

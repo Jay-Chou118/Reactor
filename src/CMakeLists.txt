@@ -1,22 +1,14 @@
-#顶层Cmake，设置全局链接库以及添加子目录，和项目的头文件.h位置
-#设置最低版本和项目名称
-cmake_minimum_required(VERSION 3.0)
-project(Reactor)
-
-#设置全局的c++标准
-set (CMAKE_CXX_STANDARD 11)
-set (CMAKE_CXX_STANDARD_REQUIRED True)
-
-#设置头文件目录，供所有子项目使用
-include_directories(${CMAKE_SOURCE_DIR}/include)
-
-# 设置输出目录
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
+#获取当前目录下的所有源文件项目
+file(GLOB SRC_FILE ${CMAKE_CURRENT_SOURCE_DIR}/*cpp)
+list(REMOVE_ITEM SRC_FILE ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
 
-#设置全局链接库
-set(LIBS
-    pthread 
-)
+# 创建共享库
+add_library(src_lib SHARED ${SRC_FILE})
 
+#创建可执行文件
+add_executable(main  main.cpp)
+
+#链接必要的库
+# target_link_libraries(main src_lib memory_lib log_lib ${LIBS})
+target_link_libraries(main src_lib  ${LIBS})

@@ -1,4 +1,5 @@
 #include "ThreadPool.h"
+#include <cassert>
 
 
 ThreadPool::ThreadPool(EventLoop* mainLoop,int count)
@@ -36,7 +37,7 @@ void ThreadPool::run()
         {
             WorkerThread* subThread = new WorkerThread(i);
             subThread->run();
-            m_threadNum.push_back(subThread);
+            m_workerThreads.push_back(subThread);
         }
     }
 }

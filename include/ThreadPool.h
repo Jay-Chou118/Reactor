@@ -20,7 +20,7 @@ public:
     ~ThreadPool();
 
     //启动线程池
-    void run() 
+    void run() ;
     //取出线程池中的某个子线程的反应堆实例
     EventLoop* takeWorkerEventLoop();
 

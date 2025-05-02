@@ -1,12 +1,14 @@
 #pragma once
 
-#incldue <string>
-#incldue <sys/select.h>
+#include <string>
+#include <sys/select.h>
 
 #include "Channel.h"
 #include "EventLoop.h"
 #include "Dispatcher.h"
-using namespace std
+
+
+using namespace std;
 
 class SelectDispatcher : public Dispatcher
 {

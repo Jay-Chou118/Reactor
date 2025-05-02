@@ -1,7 +1,7 @@
 #pragma once
 #include "Buffer.h"
 #include "HttpResponse.h"
-
+#include <cstring>
 #include <map>
 
 using namespace std;
@@ -13,7 +13,7 @@ enum class PrecessState:char
     ParseReqHeaders,
     ParseReqBody,
     ParseReqDone
-}
+};
 
 
 class HttpRequest
@@ -39,27 +39,27 @@ public:
     // void httpRequestDestroy();
 
     //获取处理状态
-    inline PrecessState getState();
+    inline PrecessState getState()
     {
         return m_curState;
     }
-
-    inline setState(PrecessState state)
+    inline void setState(PrecessState state)
     {
         m_curState = state;
     }
+
     //添加请求头
     void addHeader(const string key,const string value);
     //根据key得到请求头的value
     string getHeader(const string key);
     //解析请求行
-    bool parseRequestLine(Buffer* readBuf)
+    bool parseRequestLine(Buffer* readBuf);
     //解析请求头
     bool parseRequestHeader(Buffer* readBuf);
     //解析http请求协议
-    bool parseHttpRequest(Buffer* readBuf,HttpRequest* response,Buffer* sendBuf,int socket);
+    bool parseHttpRequest(Buffer* readBuf,HttpResponse* response,Buffer* sendBuf,int socket);
     //处理http请求协议
-    bool processHttpRequest(HttpRequest* response);
+    bool processHttpRequest(HttpResponse* response);
     //解码字符串
     string decodeMsg(string from);
     const string getFileTyppe(const string name);

@@ -1,11 +1,13 @@
 #pragma once
 
-#incldue <string>
-#incldue <poll.h>
+#include <string>
+#include <poll.h>
 #include "Channel.h"
 #include "EventLoop.h"
 #include "Dispatcher.h"
-using namespace std
+
+
+using namespace std;
 
 class PollDispatcher : public Dispatcher
 {
@@ -24,8 +26,8 @@ public:
 
 
 private:
-    int maxfd;
-    struct pollfd m_fds;
+    int m_maxfd;
+    struct pollfd* m_fds;
     const int m_maxNode = 1024;
 
 };

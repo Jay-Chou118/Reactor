@@ -1,12 +1,12 @@
 #pragma once
 
-#incldue <string>
-#incldue <sys/epoll.h>
+#include <string>
+#include <sys/epoll.h>
 #include "Channel.h"
 #include "EventLoop.h"
 #include "Dispatcher.h"
 
-using namespace std
+using namespace std;
 
 class EpollDispatcher : public Dispatcher
 {
@@ -27,7 +27,7 @@ private:
 
 private:
     int m_epfd;
-    struct epoll_event* m_event;
+    struct epoll_event* m_events;
     const int m_MaxNode = 520;
 
 };

@@ -14,38 +14,38 @@ enum class FDEvent
 //可调用对象包装器打包的是什么？1.函数指针2.可调用对象（可以向函数一样使用）
 //最终得到了地址，但是没有调用
 class Channel{
-    public:
-        using handleFuc = std::function<int(void*)>;
-        Channel(int fd,int m_events,handleFuc readFunc,handleFunc writeFunc,handleFunc destroyFunc,void* m_arg);
-        ~Channel();
-        //回调函数
-        handleFunc readCallback;
-        handleFunc writeCallback;
-        handleFunc destroyCallback;
-        //修改fd的写事件
-        void writeEventEnable(bool flag);
-        //判断是否需要检测文件描述符的写事件
-        bool isWriteEventEnable();
-        //取出私有成员的值
-        inline int getEvent()
-        {
-            return m_events;
-        }
-        inline int getSocket()
-        {
-            return m_fd;
-        }
-        inline const void* getArg()
-        {
-            return m_arg;
-        }
+public:
+    using handleFunc = std::function<int(void*)>;
+    Channel(int fd,FDEvent m_events,handleFunc readFunc,handleFunc writeFunc,handleFunc destroyFunc,void* m_arg);
+    ~Channel();
+    //回调函数
+    handleFunc readCallback;
+    handleFunc writeCallback;
+    handleFunc destroyCallback;
+    //修改fd的写事件
+    void writeEventEnable(bool flag);
+    //判断是否需要检测文件描述符的写事件
+    bool isWriteEventEnable();
+    //取出私有成员的值
+    inline int getEvent()
+    {
+        return m_events;
+    }
+    inline int getSocket()
+    {
+        return m_fd;
+    }
+    inline const void* getArg()
+    {
+        return m_arg;
+    }
 
-    private:
-        //回调函数的参数
-        void* m_arg;
-        //文件描述符
-        int m_fd;
-        //事件
-        int m_events;
+private:
+    //回调函数的参数
+    void* m_arg;
+    //文件描述符
+    int m_fd;
+    //事件
+    int m_events;
 
-}
+};

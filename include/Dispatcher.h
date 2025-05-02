@@ -1,10 +1,10 @@
 #pragma once
 
-#incldue <string>
+#include <string>
 #include "Channel.h"
 #include "EventLoop.h"
 
-using namespace std
+using namespace std;
 
 class EventLoop;
 

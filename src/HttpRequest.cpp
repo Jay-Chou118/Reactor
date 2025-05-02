@@ -1,7 +1,7 @@
 #include "HttpRequest.h"
 #include <stdio.h>
-#include <strings.h>
-#include <string.h>
+#include <string>
+#include <cstring>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <dirent.h>
@@ -12,7 +12,7 @@
 #include <ctype.h>
 #include <assert.h>
 
-
+using namespace std;
 
 
 int HttpRequest::hexToDec(char c)
@@ -99,7 +99,7 @@ bool HttpRequest::parseRequestLine(Buffer* readBuf)
 
         readBuf->readPosIncrease(lineSize + 2) ;
 
-        setstate(PrecessState::ParseReqHeaders);
+        setState(PrecessState::ParseReqHeaders);
         return true;
 
     }
@@ -107,7 +107,7 @@ bool HttpRequest::parseRequestLine(Buffer* readBuf)
 
 }
 
-char* HttpRequest::spiltRequestLine(const char* start,start,const char* end,const char* sub,function<void(string)> callback)
+char* HttpRequest::splitRequestLine(const char* start,const char* end,const char* sub,function<void(string)> callback)
 {
     char* space = const_cast<char*>(end);
     if(sub!=nullptr)
@@ -136,8 +136,8 @@ bool HttpRequest::parseRequestHeader(Buffer* readBuf)
             int valueLen = end - middle - 2;
             if(keyLen > 0 && valueLen > 0)
             {
-                string key();
-                string value();
+                string key(start,keyLen);
+                string value(middle + 2, valueLen);
                 addHeader(key,value);
             }
             //移动读数据的位置
@@ -159,7 +159,7 @@ bool HttpRequest::parseRequestHeader(Buffer* readBuf)
     return false;
 }
 
-bool HttpRequest::parseHttpRequest(Buffer* readBuf,HttpRequest* response,Buffer* sendBuf,int socket)
+bool HttpRequest::parseHttpRequest(Buffer* readBuf,HttpResponse* response,Buffer* sendBuf,int socket)
 {
 
     bool flag = true;
@@ -172,10 +172,9 @@ bool HttpRequest::parseHttpRequest(Buffer* readBuf,HttpRequest* response,Buffer*
             break;
         
         case PrecessState::ParseReqHeaders:
-            flag = paresRequestHeader(readBuf);
+            flag = parseRequestHeader(readBuf);
             break;
-        
-        case: PrecessState::ParseReqBody:
+        case PrecessState::ParseReqBody:
             break;
         default:
             break;
@@ -201,7 +200,7 @@ bool HttpRequest::parseHttpRequest(Buffer* readBuf,HttpRequest* response,Buffer*
     
 }
 
-bool HttpRequest::processHttpRequest(HttpRequest* response)
+bool HttpRequest::processHttpRequest(HttpResponse* response)
 {
     if(strcasecmp(m_method.data(),"get")!=0)
     {
@@ -210,7 +209,7 @@ bool HttpRequest::processHttpRequest(HttpRequest* response)
 
     m_url = decodeMsg(m_url);
     //处理客户端请求的静态资源（目录或者文件）
-    char* file = nullptr;
+    const char* file = NULL;
     if(strcmp(m_url.data(),"/")==0)
     {
         file = "./";
@@ -237,9 +236,8 @@ bool HttpRequest::processHttpRequest(HttpRequest* response)
 
     response->setFileName(file);
     response->setStatusCode(StatusCode::OK);
-
     //判断文件类型
-    if(S_ISDIR)
+    if(S_ISDIR(st.st_mode))
     {
         //把这个目录中的内容发送给客户端
 
@@ -262,13 +260,13 @@ bool HttpRequest::processHttpRequest(HttpRequest* response)
 
 string HttpRequest::decodeMsg(string msg)
 {
-    string str = stirng();
+    string str = string();
     const char* from = msg.data();
-    for(;*from ! ='\0';++from)
+    for(;*from !='\0';++from)
     {
         // isxdigit -> 判断字符是不是16进制格式，取值在0-F
         
-        if(from[0] == '%' && isxdigit(from[1]) && isxdigit([from[2]]))
+        if(from[0] == '%' && isxdigit(from[1]) && isxdigit(from[2]))
         {
             str.append(1,hexToDec(from[1]) * 16 + hexToDec(from[2]));
 
@@ -291,68 +289,68 @@ const string HttpRequest::getFileTyppe(const string name)
     {
         return "text/plain; charset=utf-8";
     }
-    if(strcmp(dot,:".html") == 0 || strcmp(dot,".htm") == 0)
+    if(strcmp(dot,".html") == 0 || strcmp(dot,".htm") == 0)
     {
-        retrun "text/html; charest=utf-8";
+        return "text/html; charest=utf-8";
     }
-    if(strcmp(dot,:".jpg") == 0 || strcmp(dot,".jpeg") == 0)    
+    if(strcmp(dot,".jpg") == 0 || strcmp(dot,".jpeg") == 0)    
     {
         return "image/jpeg";
     }
-    if(strcmp(dot,:".gif") == 0 )    
+    if(strcmp(dot,".gif") == 0 )    
     {
         return "image/gif";
     }
-    if(strcmp(dot,:".png") == 0 )    
+    if(strcmp(dot,".png") == 0 )    
     {
         return "image/png";
     }
-    if(strcmp(dot,:".css") == 0 )    
+    if(strcmp(dot,".css") == 0 )    
     {
         return "text/css";
     }
-    if(strcmp(dot,:".au") == 0 )    
+    if(strcmp(dot,".au") == 0 )    
     {
         return "audio/basic";
     }
-    if(strcmp(dot,:".wav") == 0 )    
+    if(strcmp(dot,".wav") == 0 )    
     {
         return "audio/wav";
     }
-    if(strcmp(dot,:".avi") == 0 )    
+    if(strcmp(dot,".avi") == 0 )    
     {
         return "video/x-msvideo";
     }
-    if(strcmp(dot,:".mov") == 0 || strcmp(dot,".qt") == 0 )    
+    if(strcmp(dot,".mov") == 0 || strcmp(dot,".qt") == 0 )    
     {
         return "video/quicktime";
     }
-    if(strcmp(dot,:".mpeg") == 0 || strcmp(dot,".mpe") == 0 )    
+    if(strcmp(dot,".mpeg") == 0 || strcmp(dot,".mpe") == 0 )    
     {
         return "video/mpeg";
     }
-    if(strcmp(dot,:".vrml") == 0 || strcmp(dot,".wrl") == 0 )    
+    if(strcmp(dot,".vrml") == 0 || strcmp(dot,".wrl") == 0 )    
     {
         return "model/vrml";
     }
-    if(strcmp(dot,:".midi") == 0 || strcmp(dot,".mid") == 0 )    
+    if(strcmp(dot,".midi") == 0 || strcmp(dot,".mid") == 0 )    
     {
         return "audio/midi";
     }
-    if(strcmp(dot,:".mp3") == 0 )    
+    if(strcmp(dot,".mp3") == 0 )    
     {
         return "audio/mpeg";
     }
-    if(strcmp(dot,:".ogg") == 0 )    
+    if(strcmp(dot,".ogg") == 0 )    
     {
         return "application/ogg";
     }
-    if(strcmp(dot,:".pac") == 0 )    
+    if(strcmp(dot,".pac") == 0 )    
     {
         return "application/x-ns-proxy-autoconfig";
     }
 
-    retrun "text/plain; charset=utf-8";
+    return "text/plain; charset=utf-8";
     
 }
 
@@ -365,11 +363,11 @@ void HttpRequest::sendDir(string dirName,Buffer* sendBuf,int cfd)
     for(int i = 0; i < num;++i)
     {
         //取出文件名，namelist指向的是一个指针数组 struct dirent* tmp[]
-        char* name = nameList[i]->d_name;
+        char* name = namelist[i]->d_name;
         struct stat st;
-        cahr subPath[1024] = {0};
+        char subPath[1024] = {0};
         sprintf(subPath,"%s/%s",dirName.data(),name);
-        if(S_ISDIF(st.st_mode))
+        if(S_ISDIR(st.st_mode))
         {
             //a标签 <a href="">name<\a>
             sprintf(buf + strlen(buf),"<tr><td><a href=\"%s/\">%s</a></td><%ld</td></tr>",name,name,st.st_size);
@@ -380,26 +378,26 @@ void HttpRequest::sendDir(string dirName,Buffer* sendBuf,int cfd)
         //send(cfd,buf,strlen(buf),0);
         sendBuf->appendString(buf);
 #ifndef MSG_SEND_AUTO
-        sendBuf->appendString(cfd);
+        sendBuf->sendData(cfd);
 #endif       
         memset(buf,0,sizeof(buf));
         free(namelist[i]);
     }
-    sprintf(buf,"<\table><\body><\html>");
+    sprintf(buf,"</table></body></html>");
     sendBuf->appendString(buf);
 #ifndef MSG_SEND_AUTO
-    sendBuf->appendString(cfd);
+    sendBuf->sendData(cfd);
 #endif  
     free(namelist);
 }
 
-void HttpRequest::sendFile(string dirName,Buffer* sendBuf,int cfd)
+void HttpRequest::sendFile(string fileName,Buffer* sendBuf,int cfd)
 {
 
     //1.打开文件
     int fd = open(fileName.data(),O_RDONLY);
     assert(fd > 0);
-#if 1
+// #if 1
     while (1)
     {
        char buf[1024];

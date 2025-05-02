@@ -1,13 +1,19 @@
 #include "Channel.h"
 
-Channel::Channel(int fd,FDEvent m_events,handleFunc readFunc,handleFunc writeFunc,handleFunc destroyFunc,void* arg){
-    m_arg=m_arg;
+Channel::Channel(int fd,FDEvent events,handleFunc readFunc,handleFunc writeFunc,handleFunc destroyFunc,void* arg){
+
+    m_arg = arg;
     m_fd = fd;
-    m_events = (int)m_events;
+    m_events = (int)events;
     readCallback = readFunc;
     writeCallback = writeFunc;
     destroyCallback = destroyFunc;
 
+}
+
+Channel::~Channel()
+{
+    
 }
 
 void Channel::writeEventEnable(bool flag){

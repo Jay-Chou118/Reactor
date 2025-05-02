@@ -10,7 +10,7 @@ int main(int argc,char* arg[])
     unsigned short port = 10000;
     chdir("/home/ubuntu/test");
     //启动服务器
-    TcpServer* server = new TcpServer(Port,4);
+    TcpServer* server = new TcpServer(port,4);
     server->run();
 
 

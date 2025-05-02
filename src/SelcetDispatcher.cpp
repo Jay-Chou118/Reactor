@@ -14,7 +14,7 @@ SelectDispatcher::~SelectDispatcher()
 }
 
 
-SelectDispatcher::add(){
+int SelectDispatcher::add(){
     if(m_channel->getSocket() >= m_maxSize)
     {
         return -1;
@@ -23,16 +23,16 @@ SelectDispatcher::add(){
     return 0;
 }
 
-SelectDispatcher::remove(){
+int SelectDispatcher::remove(){
 
 
-    clearFDSet();
+    clearFdSet();
     m_channel->destroyCallback(const_cast<void*>(m_channel->getArg()));
 
     return 0;
 }
 
-SelectDispatcher::modify(){
+int SelectDispatcher::modify(){
 
     if(m_channel->getEvent() & (int)FDEvent::ReadEvent)
     {
@@ -49,7 +49,7 @@ SelectDispatcher::modify(){
 
 }
 
-SelectDispatcher::dispatch(int timeout){
+int SelectDispatcher::dispatch(int timeout){
 
     struct timeval val;
     val.tv_sec = timeout;

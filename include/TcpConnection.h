@@ -28,8 +28,5 @@ public:
     static int processRead(void* arg);
     static int processWrite(void* arg);
     static int tcpConnectionDestroy(void* arg);
-    {
-        
-    }
 };
 

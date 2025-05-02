@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <strings.h>
 #include <sys/socket.h>
-
+#include <cstring>
 
 Buffer::Buffer(int size) :m_capacity(size)
 {
@@ -135,7 +135,7 @@ int Buffer::sendData(int socket)
 {
 
     //判断有无数据
-    itn readable = readableSize();
+    int readable = readableSize();
     if(readable > 0)
     {
         int count = send(socket,m_data + m_readPos,readable,MSG_NOSIGNAL);

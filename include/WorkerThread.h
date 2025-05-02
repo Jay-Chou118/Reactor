@@ -9,6 +9,7 @@ using namespace std;
 class WorkerThread
 {
 private:
+    thread* m_thread; //保存线程的实例
     thread::id m_threadID; //ID
     string m_name;
     mutex m_mutex;   //互斥锁
@@ -16,7 +17,7 @@ private:
     EventLoop* m_evLoop;
 
 private:
-    void* running();
+    void running();
 
 public:
     WorkerThread(int index);

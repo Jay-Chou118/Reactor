@@ -15,7 +15,7 @@ enum class StatusCode
     MovedTemporarily = 302,
     BadRequest = 400,
     NotFound = 404
-}
+};
 
 class HttpResponse
 {
@@ -27,7 +27,7 @@ private:
     //响应头
     map<string,string> m_headers;
     //定义状态码和描述的对应关系s
-    cosnt map<int,string> m_info = {
+    const map<int,string> m_info = {
         {200,"OK"},
         {301,"MovedPermanently"},
         {302,"MovedTemporarily"},

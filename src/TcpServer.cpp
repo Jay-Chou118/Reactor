@@ -69,8 +69,8 @@ void TcpServer::setListen()
     ret = listen(m_lfd,128);
     if(ret == -1)
     {
-        perror("listen")
-        return nullptr;
+        perror("listen");
+        return;
     }
 
 }
@@ -78,7 +78,7 @@ void TcpServer::setListen()
 void TcpServer::run()
 {
 
-    Debug("服务器程序已经启动.....");
+    //Debug("服务器程序已经启动.....");
     //启动线程池
     m_threadPool->run();
     //添加检测的任务

@@ -3,6 +3,8 @@
 #include "Channel.h"
 #include <thread>
 #include <queue>
+#include <mutex>
+#include <map>
 
 using namespace std;
 
@@ -60,10 +62,11 @@ private:
     //map
     map<int,Channel*> m_channelMap;
     thread::id m_threadID;
-    string m_threadName[32];
-    pthread_mutex_t m_mutex;
+    string m_threadName;
+   // pthread_mutex_t m_mutex;
+    mutex m_mutex;
     int m_socketPair[2];
     
     void taskWakeup();
 
-}
+};
