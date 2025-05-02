@@ -1,0 +1,82 @@
+#pragma once
+#include "Buffer.h"
+#include "Httpresponse.h"
+
+#include <map>
+
+using namespace std;
+
+//当前的解析状态
+enum class PrecessState:char
+{
+    ParseReqLine,
+    ParseReqHeaders,
+    ParseReqBody,
+    ParseReqDone
+}
+
+
+class HttpRequest
+{
+private:
+    string m_method;
+    string m_url;
+    string m_version;
+    map<string,string> m_reqHeaders;
+    PrecessState m_curState;
+
+private:
+    char* splitRequestLine(const char* start,const char* end,const char* sub,function<void(string)> callback);
+    int hexToDec(char c);
+    
+public:
+    HttpRequest(/* args */);
+    ~HttpRequest();
+
+    //重置
+    void reset();
+    // void httpRequestResetEX();
+    // void httpRequestDestroy();
+
+    //获取处理状态
+    inline PrecessState getState();
+    {
+        return m_curState;
+    }
+
+    inline setState(PrecessState state)
+    {
+        m_curState = state;
+    }
+    //添加请求头
+    void addHeader(const string key,const string value);
+    //根据key得到请求头的value
+    string getHeader(const string key);
+    //解析请求行
+    bool parseRequestLine(Buffer* readBuf)
+    //解析请求头
+    bool parseRequestHeader(Buffer* readBuf);
+    //解析http请求协议
+    bool parseHttpRequest(Buffer* readBuf,HttpRequest* response,Buffer* sendBuf,int socket);
+    //处理http请求协议
+    bool processHttpRequest(HttpRequest* response);
+    //解码字符串
+    string decodeMsg(string from);
+    const string getFileTyppe(const string name);
+    void sendDir(string dirName,Buffer* sendBuf,int cfd);
+    void sendFile(string dirName,Buffer* sendBuf,int cfd);
+    inline void setMethod(string method)
+    {
+        m_method = method;
+    }
+    inline void seturl(string url)
+    {
+        m_url = url;
+    }
+    inline void setVersion(string version)
+    {
+        m_version = version;
+    }
+    
+};
+

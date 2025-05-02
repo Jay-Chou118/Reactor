@@ -33,15 +33,23 @@ public:
     //添加任务到任务队列
     int addTask(struct Channel* channel,ElemType type);
     //处理任务队列中的任务
-    int processTask();
+    int processTaskQ();
     //处理dispatcher中的节点
     int add(Channel* channel);
     int  remove(Channel* channel);
     int modify(Channel* channel);
     //释放channel
     int freeChannel(Channel* channel);
-    static int readLocalMessage(void * arg);
+
+    static int readLocalMessage(void * arg);  //未使用
     int readMessage();
+
+    //返回线程ID
+    inline thread::id getThreadID()
+    {
+        return m_threadID;
+    }
+    
 
 private:
     bool m_isQuit;
@@ -55,5 +63,7 @@ private:
     string m_threadName[32];
     pthread_mutex_t m_mutex;
     int m_socketPair[2];
+    
+    void taskWakeup();
 
 }

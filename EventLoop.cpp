@@ -1,8 +1,16 @@
+#include <thread>
+#include <string.h>
 #include "EventLoop.h"
 #include "SelectDispatcher.h"
 #include "PollDispatcher.h"
 #include "EpoolDispatcher.h"
 
+
+void EventLoop::taskWakeup()
+{
+    const char* msg = "tx offer";
+    write(m_socketPair[0],msg,strlen(msg));
+}
 
 EventLoop::EventLoop() : EventLoop(string())
 {
@@ -40,6 +48,151 @@ EventLoop::~EventLoop()
     
 }
 
+int EventLoop::run(){
+    
+    m_isQuit = false;
+    //比较线程ID是否正常
+    if(m_threadID != this_thread::get_id())
+    {
+        return -1;
+    }
+
+    //循环进行事件处理
+    while(!m_isQuit)
+    {
+        m_dispatcher->dispatch();
+        processTaskQ();
+
+    }
+
+    return 0;
+}
+
+
+int EventLoop::eventActive(int fd,int event)
+{
+
+    if(fd < 0 )
+    {
+        return -1;
+    }
+    //取出channel
+    Channel* channel = m_channelMap[fd];
+    assert(channel->getSocket() == fd);
+    if(event & (int)FDEvent::ReadEvent && channel->readCallback)
+    {
+        channel->readCallback(channel->const_cast<void*>(getArg()));
+    }
+    if(event & (int)FDEvent::WriteEvent && channel->writeCallback)
+    {
+        channel->writeCallback(channel->const_cast<void*>(getArg()));
+    }
+}
+
+int EventLoop::addTask(){
+
+    //加锁，保护共享资源
+    m_mutex.lock();
+    //创建新节点
+    ChannelElement* node = new ChannelElement;
+    node->channel = Channel;
+    node->type = type;
+    m_taskQ.push(node);
+    m_mutex.unlock();
+
+    if(m_threadID == this_thread::get_id())
+    {
+        processTaskQ();
+    }else{
+        taskWakeup();
+    }
+
+    return 0;
+
+}
+
+int EventLoop::processTaskQ(){
+
+    
+    while (!m_taskQ.empty())
+    {
+        m_mutex.lock();
+        ChannelElement* node =m_taskQ.front();
+        m_taskQ.pop();
+        m_mutex.unlock();
+        Channel* channel = node->channel;
+        if(node->type == ElemType::ADD)
+        {
+            add(channel);
+        }
+        else if(node->type == ElemType::DELETE)
+        {
+            remove(channel);
+        }
+        else if (node->type == ElemType::MODIFY)
+        {
+            /* code */
+            modify(channel);
+        }
+        //freeChannel(channel);
+        delete node;
+    }
+
+}
+
+int EventLoop::add(Channel* channel)
+{
+    int fd = channel->getSocket();
+    if(m_channelMap.find(fd) == m_channelMap.end())
+    {
+        m_channelMap.insert(make_pair(fd,channel));
+        m_dispatcher->setChannel(channel);
+        int ret = m_dispatcher->add();
+        return ret;
+    }
+
+    return -1;
+}
+
+int EventLoop::remove(Channel* channel){
+    
+    int fd = channel->getSocket();
+    if(m_channelMap.find(fd) == m_channelMap.end())
+    {
+        return -1;
+    }
+    m_dispatcher->setChannel(channel);
+    int ret = m_dispatcher->remove();
+
+    return ret;
+}
+
+int EventLoop::modify(Channel* channel){
+
+    int fd = channel->getSocket();
+    if(m_channelMap.find(fd) == m_channelMap.end())
+    {
+        return -1;
+    }
+    
+    m_dispatcher->setChannel(channel);
+    int ret = m_dispatcher->modify();
+
+    return ret;
+}
+
+int EventLoop::freeChannel(Channel* channel){
+    
+    auto it = m_channelMap.find(channel->getSocket());
+    if(it != m_channelMap.end())
+    {
+        m_channelMap.erase(it);
+        close(channel->getSocket());
+        delete channel;
+    }
+
+    return 0;
+}
 int EventLoop::readLocalMessage(void* arg)
 {
     EventLoop* evLoop = static_cast<EventLoop*>(arg);
@@ -54,3 +207,4 @@ int EventLoop::readMessage()
     read(m_socketPair[1],buf,sizeof(buf));
 
 }
+
