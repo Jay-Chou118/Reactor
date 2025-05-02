@@ -230,7 +230,7 @@ bool HttpRequest::processHttpRequest(HttpResponse* response)
         response->setFileName("404.html");
         response->setStatusCode(StatusCode::NotFound);
         //响应头
-        response->addHeader("Content-type",getFileTyppe(".html"));
+        response->addHeader("Content-type",getFileType(".html"));
         response->sendDataFunc = sendFile;
 
         return 0;
@@ -244,7 +244,7 @@ bool HttpRequest::processHttpRequest(HttpResponse* response)
         //把这个目录中的内容发送给客户端
 
         //响应头
-        response->addHeader("Content-type",getFileTyppe(".html"));
+        response->addHeader("Content-type",getFileType(".html"));
         response->sendDataFunc = sendDir;
 
     }else{
@@ -253,7 +253,7 @@ bool HttpRequest::processHttpRequest(HttpResponse* response)
         //响应头
         char tmp[12] = {0};
         sprintf(tmp,"%ld",st.st_size);
-        response->addHeader("Content-type",getFileTyppe(file));
+        response->addHeader("Content-type",getFileType(file));
         response->addHeader("Content-length",to_string(st.st_size));
         response->sendDataFunc = sendFile;
     }
@@ -284,7 +284,7 @@ string HttpRequest::decodeMsg(string msg)
     return str;
 }
 
-const string HttpRequest::getFileTyppe(const string name)
+const string HttpRequest::getFileType(const string name)
 {
     const char* dot = strrchr(name.data(),'.');
     if(dot == NULL)
@@ -374,10 +374,10 @@ void HttpRequest::sendDir(string dirName,Buffer* sendBuf,int cfd)
             if(S_ISDIR(st.st_mode))
             {
                 //a标签 <a href="">name<\a>
-                sprintf(buf + strlen(buf),"<tr><td><a href=\"%s/\">%s</a></td><%ld</td></tr>",name,name,st.st_size);
+                sprintf(buf + strlen(buf),"<tr><td><a href=\"%s/\">%s</a></td><td>%ld</td></tr>",name,name,st.st_size);
             
             }else{
-                sprintf(buf + strlen(buf),"<tr><td><a href=\"%s\">%s</a></td><%ld</td></tr>",name,name,st.st_size);
+                sprintf(buf + strlen(buf),"<tr><td><a href=\"%s/\">%s</a></td><td>%ld</td></tr>",name,name,st.st_size);
             }
         }
 
