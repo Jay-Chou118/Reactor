@@ -12,7 +12,8 @@ int TcpServer::acceptConnection(void* arg)
     //从线程池中取出一个子线程的反应堆实例，去处理这个cfd
     EventLoop* evLoop = server->m_threadPool->takeWorkerEventLoop();
     //将cfd放到TcpConnection中处理
-    TcpConnection* conn = new TcpConnection(cfd,evLoop);
+    //TcpConnection* conn = new TcpConnection(cfd,evLoop);
+    new TcpConnection(cfd,evLoop);
     return 0;
 }
 

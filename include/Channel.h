@@ -1,6 +1,7 @@
 #pragma once
 #include <functional>
 
+
 // using handleFuc = int(*) (void*);
 
 enum class FDEvent
@@ -14,7 +15,7 @@ enum class FDEvent
 //最终得到了地址，但是没有调用
 class Channel{
     public:
-        using handleFuc = function<int(void*)>;
+        using handleFuc = std::function<int(void*)>;
         Channel(int fd,int m_events,handleFuc readFunc,handleFunc writeFunc,handleFunc destroyFunc,void* m_arg);
         ~Channel();
         //回调函数

@@ -1,5 +1,13 @@
-#pragma once
+
 #include "Buffer.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/uio.h>
+#include <string>
+#include <unistd.h>
+#include <strings.h>
+#include <sys/socket.h>
+
 
 Buffer::Buffer(int size) :m_capacity(size)
 {
@@ -45,7 +53,7 @@ void Buffer::extendRoom(int size)
             return; //失败了
         }
         
-        memset(temp + m_capacity,0,size);
+        memset((char*)temp + m_capacity,0,size);
         //更新数据
         m_data = static_cast<char*>(temp);
         m_capacity += size;
@@ -119,7 +127,7 @@ int Buffer::socketRead(int fd)
 
 char* Buffer::findCRLF()
 {
-    char* ptr = memmem(m_data + m_readPos,readableSize(),"\r\n",2);
+    char* ptr = (char*)memmem(m_data + m_readPos,readableSize(),"\r\n",2);
     return ptr;
 }
 

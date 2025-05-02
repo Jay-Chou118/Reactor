@@ -1,10 +1,18 @@
 #include "HttpRequest.h"
+#include <stdio.h>
+#include <strings.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include "HttpResponse.h"
 #include "TcpServer.h"
 #include <ctype.h>
 #include <assert.h>
-#include <fcntl.h>
-#include <sys/stat.h>
+
+
 
 
 int HttpRequest::hexToDec(char c)
