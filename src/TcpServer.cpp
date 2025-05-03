@@ -3,6 +3,9 @@
 #include "TcpConnection.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
+
+using namespace std;
 
 int TcpServer::acceptConnection(void* arg)
 {
@@ -14,6 +17,8 @@ int TcpServer::acceptConnection(void* arg)
     //将cfd放到TcpConnection中处理
     //TcpConnection* conn = new TcpConnection(cfd,evLoop);
     new TcpConnection(cfd,evLoop);
+
+
     return 0;
 }
 
@@ -77,9 +82,9 @@ void TcpServer::setListen()
 
 void TcpServer::run()
 {
-
+    
     //Debug("服务器程序已经启动.....");
-    printf("服务器程序已经启动.....");
+    cout << "服务器程序已经启动....." << endl;
     //启动线程池
     m_threadPool->run();
     //添加检测的任务

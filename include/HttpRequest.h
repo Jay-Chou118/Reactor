@@ -62,7 +62,7 @@ public:
     bool processHttpRequest(HttpResponse* response);
     //解码字符串
     string decodeMsg(string from);
-    const string getFileTyppe(const string name);
+    const string getFileType(const string name);
     static void sendDir(string dirName,Buffer* sendBuf,int cfd);
     static void sendFile(string dirName,Buffer* sendBuf,int cfd);
     inline void setMethod(string method)

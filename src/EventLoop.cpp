@@ -13,7 +13,7 @@
 void EventLoop::taskWakeup()
 {
     const char* msg = "tx offer";
-    write(m_socketPair[0],msg,strlen(msg));
+    write(m_socketPair[0],msg,strlen(msg));//激活
 }
 
 EventLoop::EventLoop() : EventLoop(string())

@@ -280,7 +280,7 @@ string HttpRequest::decodeMsg(string msg)
         }
     }
 
-    // str.append(1,'\0');
+    str.append(1,'\0');
     return str;
 }
 
