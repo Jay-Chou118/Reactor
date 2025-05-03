@@ -1,0 +1,72 @@
+[
+{
+  "directory": "/home/ubuntu/Reactor/build/src",
+  "command": "/usr/bin/g++   -I/home/ubuntu/Reactor/include  -g   -std=gnu++11 -o CMakeFiles/main.dir/main.cpp.o -c /home/ubuntu/Reactor/src/main.cpp",
+  "file": "/home/ubuntu/Reactor/src/main.cpp"
+},
+{
+  "directory": "/home/ubuntu/Reactor/build/src",
+  "command": "/usr/bin/g++  -Dsrc_lib_EXPORTS -I/home/ubuntu/Reactor/include  -g -fPIC   -std=gnu++11 -o CMakeFiles/src_lib.dir/Buffer.cpp.o -c /home/ubuntu/Reactor/src/Buffer.cpp",
+  "file": "/home/ubuntu/Reactor/src/Buffer.cpp"
+},
+{
+  "directory": "/home/ubuntu/Reactor/build/src",
+  "command": "/usr/bin/g++  -Dsrc_lib_EXPORTS -I/home/ubuntu/Reactor/include  -g -fPIC   -std=gnu++11 -o CMakeFiles/src_lib.dir/Channel.cpp.o -c /home/ubuntu/Reactor/src/Channel.cpp",
+  "file": "/home/ubuntu/Reactor/src/Channel.cpp"
+},
+{
+  "directory": "/home/ubuntu/Reactor/build/src",
+  "command": "/usr/bin/g++  -Dsrc_lib_EXPORTS -I/home/ubuntu/Reactor/include  -g -fPIC   -std=gnu++11 -o CMakeFiles/src_lib.dir/Dispatcher.cpp.o -c /home/ubuntu/Reactor/src/Dispatcher.cpp",
+  "file": "/home/ubuntu/Reactor/src/Dispatcher.cpp"
+},
+{
+  "directory": "/home/ubuntu/Reactor/build/src",
+  "command": "/usr/bin/g++  -Dsrc_lib_EXPORTS -I/home/ubuntu/Reactor/include  -g -fPIC   -std=gnu++11 -o CMakeFiles/src_lib.dir/EpollDispatcher.cpp.o -c /home/ubuntu/Reactor/src/EpollDispatcher.cpp",
+  "file": "/home/ubuntu/Reactor/src/EpollDispatcher.cpp"
+},
+{
+  "directory": "/home/ubuntu/Reactor/build/src",
+  "command": "/usr/bin/g++  -Dsrc_lib_EXPORTS -I/home/ubuntu/Reactor/include  -g -fPIC   -std=gnu++11 -o CMakeFiles/src_lib.dir/EventLoop.cpp.o -c /home/ubuntu/Reactor/src/EventLoop.cpp",
+  "file": "/home/ubuntu/Reactor/src/EventLoop.cpp"
+},
+{
+  "directory": "/home/ubuntu/Reactor/build/src",
+  "command": "/usr/bin/g++  -Dsrc_lib_EXPORTS -I/home/ubuntu/Reactor/include  -g -fPIC   -std=gnu++11 -o CMakeFiles/src_lib.dir/HttpRequest.cpp.o -c /home/ubuntu/Reactor/src/HttpRequest.cpp",
+  "file": "/home/ubuntu/Reactor/src/HttpRequest.cpp"
+},
+{
+  "directory": "/home/ubuntu/Reactor/build/src",
+  "command": "/usr/bin/g++  -Dsrc_lib_EXPORTS -I/home/ubuntu/Reactor/include  -g -fPIC   -std=gnu++11 -o CMakeFiles/src_lib.dir/HttpResponse.cpp.o -c /home/ubuntu/Reactor/src/HttpResponse.cpp",
+  "file": "/home/ubuntu/Reactor/src/HttpResponse.cpp"
+},
+{
+  "directory": "/home/ubuntu/Reactor/build/src",
+  "command": "/usr/bin/g++  -Dsrc_lib_EXPORTS -I/home/ubuntu/Reactor/include  -g -fPIC   -std=gnu++11 -o CMakeFiles/src_lib.dir/PollDispatcher.cpp.o -c /home/ubuntu/Reactor/src/PollDispatcher.cpp",
+  "file": "/home/ubuntu/Reactor/src/PollDispatcher.cpp"
+},
+{
+  "directory": "/home/ubuntu/Reactor/build/src",
+  "command": "/usr/bin/g++  -Dsrc_lib_EXPORTS -I/home/ubuntu/Reactor/include  -g -fPIC   -std=gnu++11 -o CMakeFiles/src_lib.dir/SelcetDispatcher.cpp.o -c /home/ubuntu/Reactor/src/SelcetDispatcher.cpp",
+  "file": "/home/ubuntu/Reactor/src/SelcetDispatcher.cpp"
+},
+{
+  "directory": "/home/ubuntu/Reactor/build/src",
+  "command": "/usr/bin/g++  -Dsrc_lib_EXPORTS -I/home/ubuntu/Reactor/include  -g -fPIC   -std=gnu++11 -o CMakeFiles/src_lib.dir/TcpConnection.cpp.o -c /home/ubuntu/Reactor/src/TcpConnection.cpp",
+  "file": "/home/ubuntu/Reactor/src/TcpConnection.cpp"
+},
+{
+  "directory": "/home/ubuntu/Reactor/build/src",
+  "command": "/usr/bin/g++  -Dsrc_lib_EXPORTS -I/home/ubuntu/Reactor/include  -g -fPIC   -std=gnu++11 -o CMakeFiles/src_lib.dir/TcpServer.cpp.o -c /home/ubuntu/Reactor/src/TcpServer.cpp",
+  "file": "/home/ubuntu/Reactor/src/TcpServer.cpp"
+},
+{
+  "directory": "/home/ubuntu/Reactor/build/src",
+  "command": "/usr/bin/g++  -Dsrc_lib_EXPORTS -I/home/ubuntu/Reactor/include  -g -fPIC   -std=gnu++11 -o CMakeFiles/src_lib.dir/ThreadPool.cpp.o -c /home/ubuntu/Reactor/src/ThreadPool.cpp",
+  "file": "/home/ubuntu/Reactor/src/ThreadPool.cpp"
+},
+{
+  "directory": "/home/ubuntu/Reactor/build/src",
+  "command": "/usr/bin/g++  -Dsrc_lib_EXPORTS -I/home/ubuntu/Reactor/include  -g -fPIC   -std=gnu++11 -o CMakeFiles/src_lib.dir/WorkerThread.cpp.o -c /home/ubuntu/Reactor/src/WorkerThread.cpp",
+  "file": "/home/ubuntu/Reactor/src/WorkerThread.cpp"
+}
+]
